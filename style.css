@@ -42,12 +42,13 @@ a:hover {
   padding: 20px 10px;
   gap: 10px;
   position: fixed;
+  top: 0;
+  left: 0;
 }
 .logo {
   width: 40px;
   height: 40px;
   position: relative;
-  background-color: #d9d9d9;
 }
 .center {
   align-self: stretch;
@@ -68,15 +69,15 @@ a:hover {
 .main {
   min-height: 100vh;
   height: 100%;
-  width: 950px;
-  border: 1px solid #360000;
+  align-self: stretch;
   box-sizing: border-box;
   overflow: hidden;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 150px;
+  /* keep content shifting as viewport shrinks (until desktop-only hides) */
+  padding: 0 clamp(16px, 8vw, 150px);
   gap: 18px;
 }
 .story-container {
@@ -238,8 +239,8 @@ a:hover {
 }
 .section {
   align-self: stretch;
+  width: 100px !important;
   flex: 1;
-  border: 1px solid #ff0000;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -248,7 +249,6 @@ a:hover {
 }
 .recommend {
   width: 344px;
-  border: 1px solid #000;
   box-sizing: border-box;
   overflow: hidden;
   display: flex;
@@ -259,7 +259,6 @@ a:hover {
 .profile {
   align-self: stretch;
   height: 60px;
-  border: 1px solid #000;
   box-sizing: border-box;
   overflow: hidden;
   flex-shrink: 0;
@@ -267,6 +266,25 @@ a:hover {
   align-items: flex-start;
   padding: 5px;
   gap: 5px;
+}
+.profile-recommend {
+  padding: 5px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  justify-content: space-between;
+}
+.profile-left {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.profile-recommend button {
+  background-color: #fff;
+  border: none;
+  color: rgb(0, 166, 255);
 }
 .profile-child {
   height: 50px;
@@ -300,4 +318,146 @@ a:hover {
 .div7 {
   position: relative;
   flex-shrink: 0;
+}
+
+@media (max-width: 1200px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* Default: hide mobile-only header on desktop */
+.mobile-only {
+  display: none;
+}
+
+/* Mobile layout (Instagram-like) */
+@media (max-width: 768px) {
+  :root {
+    --mobile-header-h: 52px;
+    --mobile-nav-h: 60px;
+  }
+
+  /* 4) header: show + fixed top */
+  .mobile-only {
+    display: flex;
+  }
+
+  .top-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--mobile-header-h);
+    background: #fff;
+    border-bottom: 1px solid #00000017;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    box-sizing: border-box;
+  }
+
+  .top-header-left {
+    font-weight: 600;
+    font-size: 18px;
+    width: fit-content;
+  }
+
+  .top-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    background: transparent;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .icon-btn:hover {
+    background-color: #00000017;
+  }
+
+  /* 1) nav: bottom fixed */
+  .nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    width: 100%;
+    height: var(--mobile-nav-h);
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 12px;
+    border-top: 1px solid #00000017;
+    background: #fff;
+    z-index: 1000;
+  }
+
+  /* desktop nav 요소 숨기기: logo + 맨 아래 햄버거 */
+  .logo,
+  .nav > a:last-child {
+    display: none;
+  }
+
+  .center {
+    flex-direction: row;
+    padding: 0;
+    gap: 10px;
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  /* main은 header 아래부터 시작 + nav 위까지만 */
+  .main {
+    width: 100%;
+    min-height: 100vh;
+    padding: 0;
+    box-sizing: border-box;
+    margin-top: var(--mobile-header-h);
+    padding-bottom: calc(var(--mobile-nav-h) + 12px);
+  }
+
+  /* 2) main > footer 삭제(=모바일에서 안 보이게) */
+  .footer {
+    display: none;
+  }
+
+  /* 3) story-container: width는 뷰포트 따라가고, 가로 스크롤은 되는데 스크롤바는 숨김 */
+  .story-container {
+    width: 100%;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge legacy */
+  }
+  .story-container::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  /* 포스트도 모바일 폭에 맞게 */
+  .post-container {
+    width: 500px;
+    padding: 0 12px;
+    box-sizing: border-box;
+  }
+  .post {
+    width: 100%;
+  }
+  .image {
+    width: 100%;
+  }
 }
